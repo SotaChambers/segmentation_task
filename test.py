@@ -300,7 +300,7 @@ def save_ckp(checkpoint, flag, checkpoint_path, best_model_path, ecpoch):
     )
 
 #<---------------各インスタンス作成---------------------->
-model = UNet(3,1).cuda()
+model = UNet(3,1).cpu()
 optimizer = torch.optim.Adam(model.parameters(),lr = 1e-3)
 criterion = DiceLoss()
 accuracy_metric = IoU()
@@ -324,8 +324,8 @@ for epoch in range(num_epochs):
     valid_score = []
     pbar = tqdm(train_loader, desc = 'description')
     for x_train, y_train in pbar:
-        x_train = torch.autograd.Variable(x_train).cuda()
-        y_train = torch.autograd.Variable(y_train).cuda()
+        x_train = torch.autograd.Variable(x_train).cpu()
+        y_train = torch.autograd.Variable(y_train).cpu()
         optimizer.zero_grad()
         output = model(x_train)
         ## 損失計算
@@ -341,8 +341,8 @@ for epoch in range(num_epochs):
     #<---------------評価---------------------->
     with torch.no_grad():
         for image,mask in val_loader:
-            image = torch.autograd.Variable(image).cuda()
-            mask = torch.autograd.Variable(mask).cuda()
+            image = torch.autograd.Variable(image).cpu()
+            mask = torch.autograd.Variable(mask).cpu()
             output = model(image)
             ## 損失計算
             loss = criterion(output, mask)

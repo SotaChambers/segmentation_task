@@ -1,0 +1,10 @@
+version: '3'
+services: 
+  prj_id: 
+    image: segmentation_task
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile
+    tty: true
+    volumes:
+      - "../:/src/segmentation_task"
