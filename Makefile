@@ -14,3 +14,7 @@ shell:
 .PHONY: prune
 prune:
 	docker system prune
+
+.PHONY: delete_DS
+delete_DS:
+	find . -name ".DS_Store" | xargs rm
