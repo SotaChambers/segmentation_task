@@ -1,5 +1,5 @@
 ARG PYTHON_ENV=python:3.10
-ARG PROJECT_ROOT=src/prj_id
+ARG PROJECT_ROOT=src/segmentation_task
 
 FROM ${PYTHON_ENV}-slim as python-base
 

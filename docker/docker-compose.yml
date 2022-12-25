@@ -1,6 +1,6 @@
 version: '3'
 services: 
-  prj_id: 
+  segmentation_task: 
     image: segmentation_task
     build:
       context: ../

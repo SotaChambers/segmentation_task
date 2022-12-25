@@ -8,7 +8,7 @@ build:
 .SILENT:
 .PHONY: shell
 shell:
-	$(DOCKER_COMPOSE) run prj_id bash
+	$(DOCKER_COMPOSE) run segmentation_task bash
 
 
 .PHONY: prune
