@@ -1,0 +1,5 @@
+outs:
+- md5: e55565f07584f7f378b95b3f7fc18566.dir
+  size: 79144378
+  nfiles: 30132
+  path: stage1_train

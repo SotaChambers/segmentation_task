@@ -1,0 +1,5 @@
+outs:
+- md5: 414a4abd795a0e7575cdc78bd159011a.dir
+  size: 9515262
+  nfiles: 65
+  path: stage1_test
