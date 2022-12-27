@@ -1,25 +1,15 @@
 # Segmentation Training
 
 ## Built Environment
-- create `.gitignore`
-```shell
-curl -L http://www.gitignore.io/api/python,windows,osx
+- For GPU machine
+```
+bash docker/setup.sh
 ```
 
-- install package
+- For other machine
 ```
-poetry add segmentation-models-pytorch
-albumentations,
-flake8,
-matplotlib
-numpy,
-opencv-contrib-python
-```
-
-- flake8
-```
-mkdir .config
-touch .config/flake8
+poetry install
+poetry shell
 ```
 
 - Download dataset

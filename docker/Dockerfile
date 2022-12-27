@@ -1,19 +1,55 @@
-ARG PYTHON_ENV=python:3.10
-ARG PROJECT_ROOT=src/segmentation_task
+FROM python
+LABEL maintainer="SotaChambers"
 
-FROM ${PYTHON_ENV}-slim as python-base
+# install requirements
+RUN apt-get update -y \
+  && apt-get install -y --no-install-recommends \
+  sudo \
+  bc \
+  bzip2 \
+  ca-certificates \
+  curl \
+  git \
+  libssl-dev \
+  libffi-dev \
+  libncurses-dev \
+  libgl1 \
+  jq \
+  nfs-common \
+  parallel \
+  python3.9 \
+  python3-dev \
+  python3-pip \
+  python3-wheel \
+  python3-setuptools \
+  unzip \
+  vim \
+  wget \
+  build-essential \
+  sshfs \
+  cron \
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/*
 
-# ROOTを環境変数にしておく(importできる)
-ENV PYTHONPATH="/src/segmentation_task/:$PYTHONPATH"
+# Create pipenv environment
+COPY requirements.txt /tmp
+RUN python3.9 -m pip install -r /tmp/requirements.txt
 
-WORKDIR /src/segmentation_task
-COPY pyproject.toml poetry.lock ./
+SHELL ["/bin/bash", "-c"]
 
-RUN \
-    apt-get update -y \
-    # DockerコンテナからOpenCVを使うと"ImportError: libGL.so.1: cannot open shared object file: No such file or directory"と言われるので，libgl1-mesa-devを入れる
-    && apt-get install -y make libopencv-dev \
-    && pip install -U pip poetry \
-    # 仮想環境を作成しない設定(コンテナ前提のため，仮想環境を作らない)
-    && poetry config virtualenvs.create false \
-    && poetry install
+WORKDIR /workspace
+
+# Add user
+ARG USER_ID
+ARG GROUP_ID
+RUN addgroup --gid $GROUP_ID user
+RUN adduser --disabled-password --gecos '' --uid $USER_ID --gid $GROUP_ID user
+RUN usermod -aG sudo user
+RUN passwd -d user
+USER user
+
+RUN mkdir -p $HOME/bin
+RUN ln -s /usr/bin/python3.9 $HOME/bin/python
+ENV PATH $PATH:$HOME/bin:$HOME/.local/bin
+
+RUN ["/bin/bash"]

@@ -70,9 +70,9 @@ class LoadDataSet(Dataset):
         mask = self.get_mask(mask_folder, 256, 256).astype("float32")
 
         augmented = self.transform(image=img, mask=mask)
-        img = augmented["image"] #TODO: ["image"]はどうやって決まっている？
-        mask = augmented["mask"] #TODO: ["mask"]はどうやって決まっている？
-        mask = mask.permute(2, 0, 1)  #TODO: mask[0]はどういう意味？->いらない
+        img = augmented["image"]
+        mask = augmented["mask"]
+        mask = mask.permute(2, 0, 1)
         return (img, mask)
 
     def get_mask(self, mask_folder, IMG_HEIGHT, IMG_WIDTH):
@@ -288,7 +288,7 @@ class IoU(nn.Module):
         return IoU
 
 
-def save_ckp(checkpoint, flag, checkpoint_path, best_model_path, ecpoch):
+def save_ckp(checkpoint, flag, checkpoint_path, best_model_path, epoch):
     torch.save(
         checkpoint,
         f"{checkpoint_path}{epoch}.pt"
@@ -300,7 +300,7 @@ def save_ckp(checkpoint, flag, checkpoint_path, best_model_path, ecpoch):
     )
 
 #<---------------各インスタンス作成---------------------->
-model = UNet(3,1).cpu()
+model = UNet(3,1).cuda()
 optimizer = torch.optim.Adam(model.parameters(),lr = 1e-3)
 criterion = DiceLoss()
 accuracy_metric = IoU()
@@ -324,8 +324,8 @@ for epoch in range(num_epochs):
     valid_score = []
     pbar = tqdm(train_loader, desc = 'description')
     for x_train, y_train in pbar:
-        x_train = torch.autograd.Variable(x_train).cpu()
-        y_train = torch.autograd.Variable(y_train).cpu()
+        x_train = torch.autograd.Variable(x_train).cuda()
+        y_train = torch.autograd.Variable(y_train).cuda()
         optimizer.zero_grad()
         output = model(x_train)
         ## 損失計算
@@ -341,8 +341,8 @@ for epoch in range(num_epochs):
     #<---------------評価---------------------->
     with torch.no_grad():
         for image,mask in val_loader:
-            image = torch.autograd.Variable(image).cpu()
-            mask = torch.autograd.Variable(mask).cpu()
+            image = torch.autograd.Variable(image).cuda()
+            mask = torch.autograd.Variable(mask).cuda()
             output = model(image)
             ## 損失計算
             loss = criterion(output, mask)
@@ -367,12 +367,12 @@ for epoch in range(num_epochs):
     }
     
     # checkpointの保存
-    save_ckp(checkpoint, False, checkpoint_path, best_model_path)
+    save_ckp(checkpoint, False, checkpoint_path, best_model_path, epoch)
     
     # 評価データにおいて最高精度のモデルのcheckpointの保存
     if total_valid_loss[-1] <= valid_loss_min:
         print('Validation loss decreased ({:.6f} --> {:.6f}).  Saving model ...'.format(valid_loss_min,total_valid_loss[-1]))
-        save_ckp(checkpoint, True, checkpoint_path, best_model_path)
+        save_ckp(checkpoint, True, checkpoint_path, best_model_path, epoch)
         valid_loss_min = total_valid_loss[-1]
 
     print("")

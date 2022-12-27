@@ -8,7 +8,7 @@ build:
 .SILENT:
 .PHONY: shell
 shell:
-	$(DOCKER_COMPOSE) run segmentation_task bash
+	docker container exec -it snakamura_test bash
 
 
 .PHONY: prune
