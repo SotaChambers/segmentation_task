@@ -1,0 +1,15 @@
+schema: '2.0'
+stages:
+  train:
+    cmd: zsh scripts/train.sh
+    deps:
+    - path: input.csv
+      md5: d038e515ee025e19fe9b8eef7558b63b
+      size: 23
+    - path: src/train.py
+      md5: 255947708c5ab8095e78fae7cfceae0b
+      size: 127
+    outs:
+    - path: output.csv
+      md5: 3a39e2567b04b3cd9cca0ba06e4b5c7a
+      size: 39

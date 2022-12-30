@@ -1,0 +1,8 @@
+stages:
+  train:
+    cmd: zsh scripts/train.sh
+    deps:
+      - input.csv
+      - src/train.py
+    outs:
+      - output.csv

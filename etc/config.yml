@@ -1,0 +1,11 @@
+TRAIN:
+  INFO:
+    DEVICE: "cuda:0"
+    INPUT_PATH: "data/stage1_train/"
+    SPLIT_RATIO: 0.25
+
+  TRANSFORM:
+    RESIZE: 256
+    H_FRIP: 0.25
+    V_FRIP: 0.25
+
