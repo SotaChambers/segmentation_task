@@ -3,6 +3,7 @@ TRAIN:
     DEVICE: "cuda:0"
     INPUT_PATH: "data/stage1_train/"
     SPLIT_RATIO: 0.25
+    EPOCH: 20
 
   TRANSFORM:
     RESIZE: 256
