@@ -2,7 +2,7 @@ from torch import nn
 
 
 class IoU(nn.Module):
-    def __init__(self, weight, size_average=True):
+    def __init__(self, weight=None, size_average=True):
         super(IoU, self).__init__()
 
     def forward(self, inputs, targets, smooth=1):

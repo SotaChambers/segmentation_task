@@ -1,7 +1,7 @@
 import click
 import numpy as np
 import torch
-import tqdm
+from tqdm import tqdm
 from torch.utils.data import random_split, DataLoader
 
 from dataloader.dataloader import LoadDataSet
@@ -44,7 +44,7 @@ def main(cfg: str):
     )
 
     # 各インスタンスの作成
-    model = UNet(3, 1).cuda()
+    model = UNet(3, 1).cpu()
     optimizer = torch.optim.Adam(model.parameters(), lr=1e-3)
     criterion = DiceLoss()
     accuracy_metric = IoU()
@@ -68,8 +68,8 @@ def main(cfg: str):
         pbar = tqdm(train_loader, desc = 'description')
         # トレーニング
         for x_train, y_train in pbar:
-            x_train = torch.autograd.Variable(x_train).cuda()
-            y_train = torch.autograd.Variable(y_train).cuda()
+            x_train = torch.autograd.Variable(x_train).cpu()
+            y_train = torch.autograd.Variable(y_train).cpu()
             optimizer.zero_grad()
             output = model(x_train)
             # 損失計算
@@ -86,8 +86,8 @@ def main(cfg: str):
         # 評価
         with torch.no_grad():
             for image,mask in val_loader:
-                image = torch.autograd.Variable(image).cuda()
-                mask = torch.autograd.Variable(mask).cuda()
+                image = torch.autograd.Variable(image).cpu()
+                mask = torch.autograd.Variable(mask).cpu()
                 output = model(image)
                 ## 損失計算
                 loss = criterion(output, mask)

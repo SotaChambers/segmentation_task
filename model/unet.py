@@ -1,7 +1,7 @@
 from torch import nn
 import torch
 
-class UNet(nn.module):
+class UNet(nn.Module):
     """セグメンテーションを行うモデルであるUNetクラス
 
     Args:
@@ -40,20 +40,32 @@ class UNet(nn.module):
 
     def forward(self, x):
         """順方向のプロセスを定義
-        (input) -> 
-        (x1: 64) -> 
-        (p1: pooling) -> 
-        (x2: 128) -> 
-        (p2: pooling) -> 
-        (x3: 256) -> 
-        (p3: pooling) -> 
-        (x4: 512) -> 
-        (p4: pooling) -> 
-        (x5: 1024) -> 
-        (p6: 512) ->
-        ()
-
-        - Skip Connerction
+        - Down Sampling
+            input(x): (10, 3, 256, 256)
+            -> x1: (10, 64, 256, 256)
+            -> p1(pooling): (10, 64, 128, 128)
+            -> x2: (10, 128, 128, 128)
+            -> p2(pooling): (10, 128, 64, 64)
+            -> x3: (10, 256, 64, 64) 
+            -> p3(pooling): (10, 256, 32, 32)
+            -> x4: (10, 512, 32, 32) 
+            -> p4(pooling): (10, 512, 16, 16)
+            -> x5: (10, 1024, 16, 16) 
+        
+        - Up Sampling
+            x6: (10, 512, 32, 32)
+            -> x6(skip connection): (10, 1024, 32, 32)
+            -> x6: (10, 512, 32, 32)
+            -> x7: (10, 256, 64, 64)
+            -> x7(skip connection): (10, 512, 64, 64)
+            -> x7: (10, 256, 64, 64)
+            -> x8: (10, 128, 128, 128)
+            -> x8(skip connection): (10, 256, 128, 128)
+            -> x8: (10, 128, 128, 128)
+            -> x9: (10, 64, 256, 256)
+            -> x9(skip connection): (10, 128, 256, 256)
+            -> x9: (10, 64, 256, 256)
+            -> output: (10, 1, 256, 256)
 
         Args:
             x (torch.Tensor): 画像のテンソル
