@@ -16,6 +16,7 @@ flake8 = "^6.0.0"
 pandas = "^1.5.2"
 dvc = "^2.38.1"
 dvc-gdrive = "^2.19.1"
+sphinx = "^6.0.0"
 
 
 [build-system]
